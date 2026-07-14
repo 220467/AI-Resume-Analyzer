@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+/* -------------------------
+   Global Styles
+-------------------------- */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #111827;
+  color: #ffffff;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* -------------------------
+   Scrollbar
+-------------------------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* -------------------------
+   Headings
+-------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* -------------------------
+   Buttons
+-------------------------- */
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* -------------------------
+   Cards
+-------------------------- */
+
+.card {
+  background: #1f2937;
+  border-radius: 18px;
+  border: 1px solid #374151;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* -------------------------
+   Inputs
+-------------------------- */
+
+input[type="file"] {
+  cursor: pointer;
+}
+
+/* -------------------------
+   Fade Animation
+-------------------------- */
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* -------------------------
+   Scale Animation
+-------------------------- */
+
+.scale-up {
+  animation: scaleUp 0.3s ease;
+}
+
+@keyframes scaleUp {
+
+  from {
+    transform: scale(0.95);
+  }
+
+  to {
+    transform: scale(1);
+  }
+
+}

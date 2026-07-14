@@ -1,0 +1,19 @@
+Python Backend Developer
+
+Skills Required
+
+Python
+FastAPI
+SQL
+Docker
+Git
+AWS
+REST API
+
+Responsibilities
+
+Develop REST APIs
+Write backend services
+Work with SQL databases
+Deploy applications
+Collaborate with frontend developers
