@@ -16,9 +16,7 @@ JOB_FOLDER = "uploads/jobs"
 @router.post("/")
 def compare_resume():
 
-    # -----------------------------
     # Resume
-    # -----------------------------
     if not os.path.exists(RESUME_FOLDER):
         return {"error": "Resume folder not found."}
 
@@ -37,9 +35,7 @@ def compare_resume():
 
     resume_text = extract_text(resume_path)
 
-    # -----------------------------
     # Job Description
-    # -----------------------------
     if not os.path.exists(JOB_FOLDER):
         return {"error": "Job folder not found."}
 
@@ -61,7 +57,6 @@ def compare_resume():
 
     if extension == ".txt":
 
-        # Try UTF-8 first
         try:
             with open(job_path, "r", encoding="utf-8") as file:
                 job_text = file.read()
@@ -69,8 +64,6 @@ def compare_resume():
             print("Read using UTF-8")
 
         except UnicodeDecodeError:
-
-            print("UTF-8 failed. Trying Latin-1...")
 
             with open(job_path, "r", encoding="latin-1") as file:
                 job_text = file.read()
@@ -80,11 +73,9 @@ def compare_resume():
     elif extension == ".pdf":
 
         print("Reading PDF")
-
         job_text = extract_text(job_path)
 
     else:
-
         return {
             "error": f"Unsupported file type: {extension}"
         }
@@ -92,12 +83,14 @@ def compare_resume():
     print("Job Preview:")
     print(job_text[:300])
 
-    # -----------------------------
-    # AI Match
-    # -----------------------------
     result = match_resume(
         resume_text,
         job_text
     )
+
+    print("=" * 80)
+    print("FINAL RESULT")
+    print(result)
+    print("=" * 80)
 
     return result

@@ -3,25 +3,23 @@ import json
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# Load environment variables
 load_dotenv()
 
-# Configure Gemini
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Gemini Model
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 
 def match_resume(resume_text, job_text):
-    prompt = f"""
-You are an expert ATS Resume Matching System.
 
-Compare the Resume with the Job Description.
+    prompt = f"""
+You are an ATS Resume Matching Expert.
+
+Compare the resume with the job description.
 
 Return ONLY valid JSON.
 
-Use EXACTLY this format:
+JSON format:
 
 {{
     "match_score": 0,
@@ -35,16 +33,12 @@ Use EXACTLY this format:
     "overall_feedback": ""
 }}
 
-Instructions:
-- match_score should be between 0 and 100.
-- matched_skills should contain only skills present in both the resume and job description.
-- missing_skills should contain important job skills missing from the resume.
-- strengths should list the resume's strongest points.
-- weaknesses should list areas needing improvement.
-- recommendations should contain actionable suggestions.
-- ats_tips should contain ATS optimization tips.
-- resume_summary should summarize the candidate in 2-3 sentences.
-- overall_feedback should provide an overall evaluation in 2-3 sentences.
+Rules:
+
+- match_score MUST be an INTEGER between 0 and 100.
+- Do NOT return "75%".
+- Do NOT return text.
+- Return ONLY JSON.
 
 Resume:
 
@@ -53,29 +47,46 @@ Resume:
 Job Description:
 
 {job_text}
-
-IMPORTANT:
-- Return ONLY valid JSON.
-- Do NOT use markdown.
-- Do NOT use ```json.
-- Do NOT include explanations.
 """
 
     try:
+
         response = model.generate_content(prompt)
 
         text = response.text.strip()
 
-        # Remove markdown if Gemini returns it
         text = text.replace("```json", "")
         text = text.replace("```", "")
         text = text.strip()
 
+        print("\n" + "=" * 80)
+        print("RAW GEMINI RESPONSE")
+        print("=" * 80)
+        print(text)
+        print("=" * 80)
+
         result = json.loads(text)
 
-        # Ensure required keys exist
+        score = result.get("match_score", 0)
+
+        if isinstance(score, str):
+
+            score = score.replace("%", "").strip()
+
+            try:
+                score = int(float(score))
+            except:
+                score = 0
+
+        if score < 0:
+            score = 0
+
+        if score > 100:
+            score = 100
+
+        result["match_score"] = score
+
         defaults = {
-            "match_score": 0,
             "matched_skills": [],
             "missing_skills": [],
             "strengths": [],
@@ -83,16 +94,22 @@ IMPORTANT:
             "recommendations": [],
             "ats_tips": [],
             "resume_summary": "",
-            "overall_feedback": "",
+            "overall_feedback": ""
         }
 
-        for key, value in defaults.items():
-            result.setdefault(key, value)
+        for key in defaults:
+
+            if key not in result:
+                result[key] = defaults[key]
 
         return result
 
     except Exception as e:
-        print("Gemini Error:", e)
+
+        print("\n" + "=" * 80)
+        print("MATCH SERVICE ERROR")
+        print(e)
+        print("=" * 80)
 
         return {
             "match_score": 0,
@@ -104,5 +121,5 @@ IMPORTANT:
             "ats_tips": [],
             "resume_summary": "",
             "overall_feedback": "",
-            "error": str(e),
+            "error": str(e)
         }
