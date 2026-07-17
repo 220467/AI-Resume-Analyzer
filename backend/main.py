@@ -14,7 +14,7 @@ app = FastAPI(
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://ai-resume-analyzer-uwue-306k7voxx.vercel.app",
+    "https://ai-resume-analyzer-uwue.vercel.app",  # <-- Correct production URL
 ]
 
 app.add_middleware(
@@ -30,16 +30,10 @@ app.include_router(resume_router)
 app.include_router(job_router)
 app.include_router(match_router)
 
-# Home Route
 @app.get("/")
 def home():
-    return {
-        "message": "AI Resume Analyzer Backend Running"
-    }
+    return {"message": "AI Resume Analyzer Backend Running"}
 
-# Health Check
 @app.get("/health")
 def health():
-    return {
-        "status": "OK"
-    }
+    return {"status": "OK"}
